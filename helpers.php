@@ -4,7 +4,7 @@ function bindField($statement, array $fieldInfo, array $options = []) {
     $field = $fieldInfo[0];
     $value = $fieldInfo[1] ?? ($_POST[$field] ?? null);
 
-    // Optional options
+    // Optional settings
     $lowercase = $options['lowercase'] ?? false;
     $type = $options['type'] ?? PDO::PARAM_STR;
 
