@@ -1,5 +1,4 @@
 <?php
-
 // Default pagination values
 $limit = isset($_GET['limit']) ? intval($_GET['limit'], 10) : 10;   // default 20
 $offset = isset($_GET['offset']) ? intval($_GET['offset'], 10) : 0; // default 0
