@@ -63,3 +63,50 @@ function ensureExists($table) {
         "data" => $result
     ];
 }
+
+function getUserRoleFromAuthHeader($conn) {
+    $headers = getallheaders();
+    $authHeader = $headers['Authorization'] ?? '';
+
+    // Check if the Authorization header exists and starts with "Bearer "
+    if (!is_string($authHeader) || stripos($authHeader, 'Bearer ') !== 0) {
+        http_response_code(401);
+        echo json_encode(["error" => "Missing or invalid Authorization header"]);
+        exit;
+    }
+
+    // Extract token
+    $token = trim(str_ireplace('Bearer ', '', $authHeader));
+
+    // Lookup in database
+    $stmt = $conn->prepare("SELECT name FROM roles WHERE token = :token LIMIT 1");
+    $stmt->execute(['token' => $token]);
+    $role = $stmt->fetchColumn();
+
+    if (!$role) {
+        http_response_code(401);
+        echo json_encode(["error" => "Invalid or expired token"]);
+        exit;
+    }
+
+    return $role;
+}
+
+function handleOptions($conn, $methods) {
+    // Authenticate user
+    $role = getUserRoleFromAuthHeader($conn); // now requires DB connection
+
+    // Restrict allowed methods for viewers
+    if ($role !== 'editor') {
+        $methods = array_filter($methods, fn($m) => in_array($m, ['GET', 'OPTIONS']));
+    }
+
+    // CORS + Allow headers
+    header('Allow: ' . implode(', ', $methods));
+    header('Access-Control-Allow-Methods: ' . implode(', ', $methods));
+    header('Access-Control-Allow-Headers: Authorization, Content-Type');
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Max-Age: 86400'); // optional: cache preflight for 1 day
+    http_response_code(204);
+    exit;
+}
