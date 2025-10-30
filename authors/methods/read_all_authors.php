@@ -13,12 +13,8 @@ $count_stmt = $conn->prepare($count_sql);
 $count_stmt->execute();
 $total = $count_stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-// Main query with LIMIT + OFFSET + EXPAND (conditional query)
-$select = "SELECT a.id, a.name";
-$from   = " FROM authors a";
-
-// Final concatenated SQL
-$sql_get_info = $select . $from . " LIMIT :limit OFFSET :offset";
+// Main query with LIMIT + OFFSET
+$sql_get_info = "SELECT a.id, a.name FROM authors a LIMIT :limit OFFSET :offset";
 
 $stmt = $conn->prepare($sql_get_info);
 $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
