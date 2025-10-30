@@ -53,7 +53,6 @@ foreach ($results as $row) {
     // Always include minimal info
     if (!isset($books[$id])) {
         $books[$id] = [
-            "id" => $id,
             "title" => $row['title'],
             "url" => "$base_url/books?id=$id"
         ];
