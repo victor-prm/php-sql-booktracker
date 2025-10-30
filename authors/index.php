@@ -11,13 +11,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET["id"])) {
     $book = ensureExists("books"); // validation + ensures 404 if not found
     $id = $book["id"]; // safely validated numeric ID
 
-    include __DIR__ . '/methods/read_single_book.php';
+    include __DIR__ . '/methods/read_single.php';
 }
 
 // GET ALL (with pagination)
 elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // GET /books → get all
-    include __DIR__ . '/methods/read_all_books.php';
+    include __DIR__ . '/methods/read_all.php';
 }
 
 

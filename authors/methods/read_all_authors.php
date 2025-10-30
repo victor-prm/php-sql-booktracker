@@ -152,9 +152,16 @@ $output = [
         "offset" => $offset,             // starting position
         "count" => count($books),        // actual number of items returned
         "total" => $total,               // total number of products available
-        "navigation" => $links                // navigation links (self, next, prev)
+        "navigation" => $links           // navigation links (next, prev)
     ],
     "results" => array_values($books)    // actual data results
 ];
 
 echo json_encode($output, JSON_PRETTY_PRINT);
+
+
+
+
+
+
+
