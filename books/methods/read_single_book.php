@@ -65,7 +65,7 @@ $output = [
     "published_year" => $results[0]["year"],
     "page_count" => $results[0]["pages"],
     "reading_status" => $results[0]["status"],
-    "link" => "$base_url/books?id=$id",
+    /* "link" => "$base_url/books?id=$id", */
     "navigation" => [
         "prev" => $prev ? "$base_url/books?id={$prev['previous_id']}" : null,
         "next" => $next ? "$base_url/books?id={$next['next_id']}" : null
