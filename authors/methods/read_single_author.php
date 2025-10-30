@@ -56,7 +56,6 @@ $output = [
 foreach ($results as $row) {
     if (!empty($row['book_id'])) {
         $output['books'][] = [
-            "id" => $row['book_id'],
             "title" => $row['book_title'],
             "url" => "$base_url/books?id=" . $row['book_id']
         ];
