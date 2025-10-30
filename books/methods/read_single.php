@@ -56,9 +56,8 @@ $output = [
     "authors" => [],
     "genres" => [
         [
-            "id" => $results[0]["main_genre_id"],
-            "name" => $results[0]["main_genre"],
-            "type" => "main"
+            "name" => $results[0]['main_genre'],
+            "url"  => "$base_url/genres?id=" . $results[0]['main_genre_id'],
         ]
     ],
     "frontpage_img" => $results[0]["frontpage_img"],
@@ -78,25 +77,24 @@ $addedAuthors = [];
 $addedGenres = [];
 
 // Fill in authors
-foreach ($results as $r) {
-    if (!in_array($r["author_id"], $addedAuthors) && $r["author_id"]) {
+foreach ($results as $row) {
+    if (!in_array($row["author_id"], $addedAuthors) && $row["author_id"]) {
         $output["authors"][] = [
-            "id" => $r["author_id"],
-            "name" => $r["author_name"]
+            "name" => $row['author_name'],
+            "url"  => "$base_url/authors?id=" . $row['author_id']
         ];
-        $addedAuthors[] = $r["author_id"];
+        $addedAuthors[] = $row["author_id"];
     }
 }
 
 // Fill in subgenres
-foreach ($results as $r) {
-    if (!in_array($r["genre_id"], $addedGenres) && $r["genre_id"]) {
+foreach ($results as $row) {
+    if (!in_array($row["genre_id"], $addedGenres) && $row["genre_id"]) {
         $output["genres"][] = [
-            "id" => $r["genre_id"],
-            "name" => $r["genre_name"],
-            "type" => "sub"
+            "name" => $row['genre_name'],
+            "url"  => "$base_url/genres?id=" . $row['genre_id'],
         ];
-        $addedGenres[] = $r["genre_id"];
+        $addedGenres[] = $row["genre_id"];
     }
 }
 
