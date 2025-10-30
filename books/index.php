@@ -24,7 +24,6 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 //POST (create new book)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // GET /books → get all
     include __DIR__ . '/methods/create_book.php';
 }
 

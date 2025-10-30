@@ -7,25 +7,24 @@ $base_url = 'http://localhost:8888/booktracker';
 
 //GET SINGLE (detail view)
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET["id"])) {
-    // GET /books?id=15 → get single
-    $book = ensureExists("books"); // validation + ensures 404 if not found
-    $id = $book["id"]; // safely validated numeric ID
+    // GET /authors?id=15 → get single
+    $author = ensureExists("authors"); // validation + ensures 404 if not found
+    $id = $author["id"]; // safely validated numeric ID
 
-    include __DIR__ . '/methods/read_single.php';
+    include __DIR__ . '/methods/read_single_author.php';
 }
 
 // GET ALL (with pagination)
 elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // GET /books → get all
-    include __DIR__ . '/methods/read_all.php';
+    // GET /authors → get all
+    include __DIR__ . '/methods/read_all_authors.php';
 }
 
 
 
-//POST (create new book)
+//POST (create new author)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // GET /books → get all
-    include __DIR__ . '/methods/create_book.php';
+    include __DIR__ . '/methods/create_author.php';
 }
 
 /* 
@@ -35,5 +34,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 
 //DELETE
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    include __DIR__ . '/methods/delete_book.php';
+    include __DIR__ . '/methods/delete_author.php';
 }
