@@ -6,8 +6,6 @@ require_once __DIR__ . '/../helpers.php';
 $base_url = 'http://localhost:8888/booktracker';
 $method = $method ?? $_SERVER['REQUEST_METHOD'];
 
-var_dump($conn);
-
 switch ($method) {
     case 'GET':
         if (!empty($_GET["id"])) {
@@ -27,7 +25,7 @@ switch ($method) {
     case 'DELETE':
         // Protected: editors only
         requireRole(['editor']);
-        include __DIR__ . "/methods/create_book.php";
+        include __DIR__ . "/methods/" . $method . "_single_book.php";
         break;
 
     default:
