@@ -1,21 +1,30 @@
 <?php
-require("../db.php");
-require("../helpers/data.php");
+// We assume $conn, $method, and $base_url are already set by the root index.php, but I'm adding them for safety anyways
+require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../helpers/data.php';
+require_once __DIR__ . '/../helpers/http.php';
 
-// Define a base URL used for both item links and pagination links
-$base_url = 'http://localhost:8888/genretracker';
+$base_url = 'http://localhost:8888/booktracker';
+$method = $method ?? $_SERVER['REQUEST_METHOD'];
+$lookupItem = "genre";
 
-//GET SINGLE (detail view)
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET["id"])) {
-    // GET /genres?id=15 → get single
-    $genre = ensureExists("genres"); // validation + ensures 404 if not found
-    $id = $genre["id"]; // safely validated numeric ID
+switch ($method) {
+    case 'GET':
+        if (!empty($_GET["id"])) {
+            // Protected: Viewers and Editors only (single item view)
+            requireRole(['viewer', 'editor']);
+            $book = ensureExists("{$lookupItem}s");
+            $id = $book["id"];
+            include __DIR__ . "/methods/{$method}_single_{$lookupItem}.php";
+        } else {
+            // Public: List all items
+            include __DIR__ . "/methods/{$method}_all_{$lookupItem}s.php";
+        }
+        break;
 
-    include __DIR__ . '/methods/read_single_genre.php';
-}
-
-// GET ALL (with pagination)
-elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // GET /genres → get all
-    include __DIR__ . '/methods/read_all_genres.php';
+    default:
+        http_response_code(405);
+        echo json_encode(['error' => 'Method not allowed']);
+        break;
 }

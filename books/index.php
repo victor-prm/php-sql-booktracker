@@ -18,7 +18,7 @@ switch ($method) {
             $id = $book["id"];
             include __DIR__ . "/methods/{$method}_single_{$lookupItem}.php";
         } else {
-            // Public: List all books
+            // Public: List all items
             include __DIR__ . "/methods/{$method}_all_{$lookupItem}s.php";
         }
         break;
