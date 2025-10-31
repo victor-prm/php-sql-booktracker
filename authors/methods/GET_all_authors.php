@@ -7,61 +7,91 @@ $offset = isset($_GET['offset']) ? intval($_GET['offset'], 10) : 0; // default 0
 $limit = max(1, min($limit, 50)); // 1–50 results max
 $offset = max(0, $offset);
 
-// Get total number of products for pagination info
+// Get total number of authors for pagination info
 $count_sql = "SELECT COUNT(*) AS total FROM authors";
 $count_stmt = $conn->prepare($count_sql);
 $count_stmt->execute();
 $total = $count_stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-// Main query with LIMIT + OFFSET
-$sql_get_info = "SELECT a.id, a.name FROM authors a LIMIT :limit OFFSET :offset";
+// Apply search and filters
+$whereParts = [];
+$params = [];
+
+// Example: search by author name
+if (!empty($_GET['q'])) {
+    $whereParts[] = "a.name LIKE :search";
+    $params['search'] = '%' . $_GET['q'] . '%';
+}
+
+// Example: filter by birth year (optional if column exists)
+if (!empty($_GET['birth_year']) && is_numeric($_GET['birth_year'])) {
+    $whereParts[] = "a.birth_year = :birth_year";
+    $params['birth_year'] = (int)$_GET['birth_year'];
+}
+
+// Build WHERE clause
+$whereSQL = '';
+if (!empty($whereParts)) {
+    $whereSQL = ' WHERE ' . implode(' AND ', $whereParts);
+}
+
+// Final SQL with pagination
+$sql_get_info = "SELECT a.id, a.name, a.birth_year, a.bio 
+                 FROM authors a" . $whereSQL . " 
+                 LIMIT :limit OFFSET :offset";
 
 $stmt = $conn->prepare($sql_get_info);
-$stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+
+// Bind search/filter parameters
+foreach ($params as $key => $value) {
+    if ($key === 'search') {
+        $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
+    } else {
+        $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
+    }
+}
+
+// Bind pagination params
+$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
 $stmt->execute();
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $authors = [];
 
-
-// Build structured array of authors with their authors/genres
+// Build structured output
 foreach ($results as $row) {
     $id = $row['id'];
-
-    // Always include minimal info
-    if (!isset($authors[$id])) {
-        $authors[$id] = [
-            "name" => $row['name'],
-            "url" => "$base_url/authors?id=$id"
-        ];
-    }
+    $authors[] = [
+        "id" => $id,
+        "name" => $row['name'],
+        "birth_year" => $row['birth_year'] ?? null,
+        "url" => "$base_url/authors?id=$id"
+    ];
 }
 
-// Build pagination navigation links
+// Pagination navigation
 $next_offset = $offset + $limit;
 $prev_offset = max(0, $offset - $limit);
 
 $links = [
-    // "next" points to the next page if more results exist
     "next" => $next_offset < $total ? "$base_url/authors?limit=$limit&offset=$next_offset" : null,
-    // "prev" points to the previous page if offset > 0
     "prev" => $offset > 0 ? "$base_url/authors?limit=$limit&offset=$prev_offset" : null
 ];
 
-// Output as JSON (with metadata and hypermedia controls)
+// Output as JSON
 header("Content-Type: application/json; charset=utf-8");
 $output = [
     "meta" => [
-        "limit" => $limit,               // number of items requested
-        "offset" => $offset,             // starting position
-        "count" => count($authors),      // actual number of items returned
-        "total" => $total,               // total number of products available
-        "navigation" => $links           // navigation links (next, prev)
+        "limit" => $limit,
+        "offset" => $offset,
+        "count" => count($authors),
+        "total" => $total,
+        "navigation" => $links
     ],
-    "results" => array_values($authors)  // actual data results
+    "results" => $authors
 ];
 
-header("Content-Type: application/json; charset=utf-8");
 http_response_code(200);
 echo json_encode($output, JSON_PRETTY_PRINT);

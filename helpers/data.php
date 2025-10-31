@@ -64,3 +64,23 @@ function ensureExists($table, $id = null) {
         "data" => $result
     ];
 }
+
+function applySearchAndFilters(array &$whereParts, array &$params) {
+    // Example: search by title
+    if (!empty($_GET['q'])) {
+        $whereParts[] = "b.title LIKE :search";
+        $params['search'] = '%' . $_GET['q'] . '%';
+    }
+
+    // Example: filter by main genre
+    if (!empty($_GET['genre_id']) && is_numeric($_GET['genre_id'])) {
+        $whereParts[] = "b.main_genre_id = :genre_id";
+        $params['genre_id'] = (int)$_GET['genre_id'];
+    }
+
+    // Example: filter by author
+    if (!empty($_GET['author_id']) && is_numeric($_GET['author_id'])) {
+        $whereParts[] = "a.id = :author_id";
+        $params['author_id'] = (int)$_GET['author_id'];
+    }
+}
