@@ -67,29 +67,49 @@ function ensureExists($table, $id = null) {
 
 
 //Apply search and filters for books
-function applyBookSearchAndFilters(array &$whereParts, array &$params, bool $includeAuthors = false) {
+function applyBookSearchAndFilters(&$whereParts, &$params, $includeAuthors = false, $includeGenres = false) {
+    // Make sure $whereParts and $params are arrays
+    $whereParts = (array) $whereParts;
+    $params = (array) $params;
+
+    // Cast booleans explicitly
+    $includeAuthors = (bool) $includeAuthors;
+    $includeGenres = (bool) $includeGenres;
+
     // Search by title
     if (!empty($_GET['q'])) {
         $whereParts[] = "b.title LIKE :search";
-        $params['search'] = '%' . $_GET['q'] . '%';
+        $params['search'] = '%' . (string) $_GET['q'] . '%';
     }
 
     // Filter by main genre
-    if (!empty($_GET['genre_id']) && is_numeric($_GET['genre_id'])) {
-        $whereParts[] = "b.main_genre_id = :genre_id";
-        $params['genre_id'] = (int)$_GET['genre_id'];
+    if (!empty($_GET['main_genre_id'])) {
+        $whereParts[] = "b.main_genre_id = :main_genre_id";
+        $params['main_genre_id'] = (int) $_GET['main_genre_id'];
     }
 
-    // Filter by author (only if join is active)
-    if ($includeAuthors && !empty($_GET['author_id']) && is_numeric($_GET['author_id'])) {
+    // Filter by sub-genre (only if genres join exists)
+    if ($includeGenres && !empty($_GET['sub_genre_id'])) {
+        $whereParts[] = "g.id = :sub_genre_id";
+        $params['sub_genre_id'] = (int) $_GET['sub_genre_id'];
+    }
+
+    // Filter by author (only if authors join exists)
+    if ($includeAuthors && !empty($_GET['author_id'])) {
         $whereParts[] = "a.id = :author_id";
-        $params['author_id'] = (int)$_GET['author_id'];
+        $params['author_id'] = (int) $_GET['author_id'];
     }
 
     // Filter by publication year
-    if (!empty($_GET['year']) && is_numeric($_GET['year'])) {
+    if (!empty($_GET['year'])) {
         $whereParts[] = "b.year = :year";
-        $params['year'] = (int)$_GET['year'];
+        $params['year'] = (int) $_GET['year'];
+    }
+
+    // Optional: filter by description
+    if (!empty($_GET['description'])) {
+        $whereParts[] = "b.description LIKE :description";
+        $params['description'] = '%' . (string) $_GET['description'] . '%';
     }
 }
 
@@ -101,20 +121,20 @@ function applyAuthorSearchAndFilters(array &$whereParts, array &$params) {
         $params['search'] = '%' . $_GET['q'] . '%';
     }
 
+    // Search by bio (optional)
+    if (!empty($_GET['bio'])) {
+        $whereParts[] = "a.bio LIKE :bio";
+        $params['bio'] = '%' . $_GET['bio'] . '%';
+    }
+
     // Filter by birth year
     if (!empty($_GET['birth_year']) && is_numeric($_GET['birth_year'])) {
         $whereParts[] = "a.birth_year = :birth_year";
         $params['birth_year'] = (int)$_GET['birth_year'];
     }
-
-    // Filter by ID (in case frontend needs to request a specific one)
-    if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
-        $whereParts[] = "a.id = :id";
-        $params['id'] = (int)$_GET['id'];
-    }
 }
 
 //Build where clause for authors/books filters/search
-function buildWhereClause($whereParts){
+function buildWhereClause($whereParts) {
     return !empty($whereParts) ? ' WHERE ' . implode(' AND ', $whereParts) : '';
 }

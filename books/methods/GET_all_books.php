@@ -3,7 +3,7 @@
 $expand = isset($_GET['expand']) ? explode(',', $_GET['expand']) : [];
 
 $includeAuthors = in_array('authors', $expand);
-$includeGenres  = in_array('genres', $expand);
+$includeGenres = in_array('genres', $expand);
 $includeImg     = in_array('img', $expand);
 $includeYear     = in_array('year', $expand);
 
@@ -37,7 +37,7 @@ if ($includeAuthors) {
     $from   .= " LEFT JOIN book_authors ba ON b.id = ba.book_id LEFT JOIN authors a ON ba.author_id = a.id";
 }
 
-// Check if genres should be included
+// Join genres if requested or if filtering by sub-genre
 if ($includeGenres) {
     $select .= ", g.id AS genre_id, g.name AS genre_name, b.main_genre_id, mg.name AS main_genre";
     $from   .= " LEFT JOIN book_genres bg ON b.id = bg.book_id 
@@ -45,10 +45,13 @@ if ($includeGenres) {
                  LEFT JOIN genres mg ON b.main_genre_id = mg.id";
 }
 
+
 //Apply search and filters
 $whereParts = [];
 $params = [];
-applyBookSearchAndFilters($whereParts, $params, $includeAuthors);
+applyBookSearchAndFilters($whereParts, $params, $includeAuthors, $includeGenres);
+
+// Build WHERE clause
 $whereSQL = buildWhereClause($whereParts);
 
 // Final concatenated SQL
@@ -115,24 +118,22 @@ foreach ($results as $row) {
     }
 
     if ($includeGenres) {
-        // Initialize genres array if needed
+        // Initialize genres array
         if (!isset($books[$id]['genres'])) $books[$id]['genres'] = [];
 
-        // Add main genre if not already present
+        // Add main genre first
         if (!empty($row['main_genre_id'])) {
             $mainGenreUrl = "$base_url/genres?id=" . $row['main_genre_id'];
-            $existingUrls = array_column($books[$id]['genres'], 'url');
-            if (!in_array($mainGenreUrl, $existingUrls)) {
-                $books[$id]['genres'][] = [
-                    "name" => $row['main_genre'],
-                    "url"  => $mainGenreUrl,
-                ];
-            }
+            $books[$id]['genres'][] = [
+                "name" => $row['main_genre'],
+                "url"  => $mainGenreUrl,
+            ];
         }
 
-        // Add subgenre if not already present
+        // Add subgenres
         if (!empty($row['genre_id'])) {
             $subGenreUrl = "$base_url/genres?id=" . $row['genre_id'];
+            // Avoid duplicates
             $existingUrls = array_column($books[$id]['genres'], 'url');
             if (!in_array($subGenreUrl, $existingUrls)) {
                 $books[$id]['genres'][] = [
@@ -178,10 +179,3 @@ $output = [
 header("Content-Type: application/json; charset=utf-8");
 http_response_code(200);
 echo json_encode($output, JSON_PRETTY_PRINT);
-
-
-
-
-
-
-
