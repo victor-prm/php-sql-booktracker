@@ -83,9 +83,9 @@ function applyBookSearchAndFilters(&$whereParts, &$params, $includeAuthors = fal
     // Free-text search across multiple columns
     if (!empty($_GET['q'])) {
         $whereParts[] = "(
-    b.title LIKE :search_start OR b.title LIKE :search_middle OR
-    b.description LIKE :search_start OR b.description LIKE :search_middle
-)";
+        b.title LIKE :search_start OR b.title LIKE :search_middle OR
+        b.description LIKE :search_start OR b.description LIKE :search_middle)";
+        
         $params['search_start']  = $_GET['q'] . '%';        // match start of field
         $params['search_middle'] = '% ' . $_GET['q'] . '%'; // match after a space
     }
