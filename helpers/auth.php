@@ -2,8 +2,7 @@
 <?php 
 function getUserRoleFromAuthHeader($conn, $allowPublic = true) {
     $headers = getallheaders();
-    $authHeader = $headers['X-Authorization'] ?? ''; // Custom header from postman
-    //var_dump($authHeader);
+    $authHeader = $headers['X-Authorization'] ?? '';
 
     if (empty($authHeader)) {
         return $allowPublic ? 'public' : unauthorized();
@@ -13,7 +12,6 @@ function getUserRoleFromAuthHeader($conn, $allowPublic = true) {
         return $allowPublic ? 'public' : unauthorized();
     }
 
-    //Remove "Bearer " when looking on the token in the DB
     $token = trim(str_replace('Bearer ', '', $authHeader));
 
     $stmt = $conn->prepare("SELECT name FROM roles WHERE token = :token LIMIT 1");
@@ -27,7 +25,7 @@ function getUserRoleFromAuthHeader($conn, $allowPublic = true) {
     return $role;
 }
 
-function requireRole(array|string $allowedRoles) {
+function requireRole($allowedRoles) {
     global $conn; // access shared DB connection
 
     $currentRole = getUserRoleFromAuthHeader($conn, false);
