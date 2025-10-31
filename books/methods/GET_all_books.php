@@ -2,10 +2,10 @@
 // Options for expanded object e.g. for grid view in frontend
 $expand = isset($_GET['expand']) ? explode(',', $_GET['expand']) : [];
 
-$includeAuthors = in_array('authors', $expand);
-$includeGenres = in_array('genres', $expand);
+$includeGenres = in_array('genres', $expand) || !empty($_GET['sub_genre_id']);
+$includeAuthors = in_array('authors', $expand) || !empty($_GET['author_id']);
 $includeImg     = in_array('img', $expand);
-$includeYear     = in_array('year', $expand);
+$includeYear    = in_array('year', $expand);
 
 // Default pagination values
 $limit = isset($_GET['limit']) ? intval($_GET['limit'], 10) : 10;   // default 10
@@ -34,14 +34,15 @@ if ($includeYear) $select .= ", b.year";
 // Check if authors should be included
 if ($includeAuthors) {
     $select .= ", a.id AS author_id, a.name AS author_name";
-    $from   .= " LEFT JOIN book_authors ba ON b.id = ba.book_id LEFT JOIN authors a ON ba.author_id = a.id";
+    $from   .= " LEFT JOIN book_authors ba ON b.id = ba.book_id
+                 LEFT JOIN authors a ON ba.author_id = a.id";
 }
 
-// Join genres if requested or if filtering by sub-genre
+// Join genres if either expand or sub-genre filter is requested
 if ($includeGenres) {
     $select .= ", g.id AS genre_id, g.name AS genre_name, b.main_genre_id, mg.name AS main_genre";
-    $from   .= " LEFT JOIN book_genres bg ON b.id = bg.book_id 
-                 LEFT JOIN genres g ON bg.genre_id = g.id 
+    $from   .= " LEFT JOIN book_genres bg ON b.id = bg.book_id
+                 LEFT JOIN genres g ON bg.genre_id = g.id
                  LEFT JOIN genres mg ON b.main_genre_id = mg.id";
 }
 
@@ -50,6 +51,12 @@ if ($includeGenres) {
 $whereParts = [];
 $params = [];
 applyBookSearchAndFilters($whereParts, $params, $includeAuthors, $includeGenres);
+
+// Filter by sub-genre (join exists because $includeGenres)
+if (!empty($_GET['sub_genre_id'])) {
+    $whereParts[] = "g.id = :sub_genre_id";
+    $params['sub_genre_id'] = (int) $_GET['sub_genre_id'];
+}
 
 // Build WHERE clause
 $whereSQL = buildWhereClause($whereParts);

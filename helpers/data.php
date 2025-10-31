@@ -68,11 +68,9 @@ function ensureExists($table, $id = null) {
 
 //Apply search and filters for books
 function applyBookSearchAndFilters(&$whereParts, &$params, $includeAuthors = false, $includeGenres = false) {
-    // Make sure $whereParts and $params are arrays
+    // Ensure types
     $whereParts = (array) $whereParts;
     $params = (array) $params;
-
-    // Cast booleans explicitly
     $includeAuthors = (bool) $includeAuthors;
     $includeGenres = (bool) $includeGenres;
 
@@ -83,30 +81,30 @@ function applyBookSearchAndFilters(&$whereParts, &$params, $includeAuthors = fal
     }
 
     // Filter by main genre
-    if (!empty($_GET['main_genre_id'])) {
+    if (!empty($_GET['main_genre_id']) && is_numeric($_GET['main_genre_id'])) {
         $whereParts[] = "b.main_genre_id = :main_genre_id";
         $params['main_genre_id'] = (int) $_GET['main_genre_id'];
     }
 
-    // Filter by sub-genre (only if genres join exists)
-    if ($includeGenres && !empty($_GET['sub_genre_id'])) {
+    // Filter by sub-genre (join must exist)
+    if ($includeGenres && !empty($_GET['sub_genre_id']) && is_numeric($_GET['sub_genre_id'])) {
         $whereParts[] = "g.id = :sub_genre_id";
         $params['sub_genre_id'] = (int) $_GET['sub_genre_id'];
     }
 
-    // Filter by author (only if authors join exists)
-    if ($includeAuthors && !empty($_GET['author_id'])) {
+    // Filter by author (join must exist)
+    if ($includeAuthors && !empty($_GET['author_id']) && is_numeric($_GET['author_id'])) {
         $whereParts[] = "a.id = :author_id";
         $params['author_id'] = (int) $_GET['author_id'];
     }
 
-    // Filter by publication year
-    if (!empty($_GET['year'])) {
+    // Filter by year
+    if (!empty($_GET['year']) && is_numeric($_GET['year'])) {
         $whereParts[] = "b.year = :year";
         $params['year'] = (int) $_GET['year'];
     }
 
-    // Optional: filter by description
+    // Filter by description
     if (!empty($_GET['description'])) {
         $whereParts[] = "b.description LIKE :description";
         $params['description'] = '%' . (string) $_GET['description'] . '%';
