@@ -74,10 +74,20 @@ function applyBookSearchAndFilters(&$whereParts, &$params, $includeAuthors = fal
     $includeAuthors = (bool) $includeAuthors;
     $includeGenres = (bool) $includeGenres;
 
-    // Search by title
+    // Filter by title specifically
+    if (!empty($filterTitle)) {
+        $whereParts[] = "b.title LIKE :title";
+        $params['title'] = '%' . (string) $filterTitle . '%';
+    }
+
+    // Free-text search across multiple columns
     if (!empty($_GET['q'])) {
-        $whereParts[] = "b.title LIKE :search";
-        $params['search'] = '%' . (string) $_GET['q'] . '%';
+        $whereParts[] = "(
+    b.title LIKE :search_start OR b.title LIKE :search_middle OR
+    b.description LIKE :search_start OR b.description LIKE :search_middle
+)";
+        $params['search_start']  = $_GET['q'] . '%';        // match start of field
+        $params['search_middle'] = '% ' . $_GET['q'] . '%'; // match after a space
     }
 
     // Filter by main genre

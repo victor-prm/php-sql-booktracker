@@ -52,12 +52,6 @@ $whereParts = [];
 $params = [];
 applyBookSearchAndFilters($whereParts, $params, $includeAuthors, $includeGenres);
 
-// Filter by sub-genre (join exists because $includeGenres)
-if (!empty($_GET['sub_genre_id'])) {
-    $whereParts[] = "g.id = :sub_genre_id";
-    $params['sub_genre_id'] = (int) $_GET['sub_genre_id'];
-}
-
 // Build WHERE clause
 $whereSQL = buildWhereClause($whereParts);
 
@@ -68,7 +62,8 @@ $stmt = $conn->prepare($sql_get_info);
 
 // Bind search/filter parameters
 foreach ($params as $key => $value) {
-    if ($key === 'search') {
+    // Bind string parameters
+    if (in_array($key, ['search_start', 'search_middle', 'title', 'description'])) {
         $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
     } else {
         $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
