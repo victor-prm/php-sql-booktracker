@@ -1,4 +1,4 @@
-<?php 
+<?php
 function bindField($statement, array $fieldInfo, array $options = []) {
     // fieldInfo can be either: ["fieldname"] or ["fieldname", $explicitValue]
     $field = $fieldInfo[0];
@@ -18,17 +18,18 @@ function bindField($statement, array $fieldInfo, array $options = []) {
     $statement->bindParam($key, $value, $type);
 }
 
-function ensureExists($table) {
+function ensureExists($table, $id = null) {
     global $conn;
 
-    // Validate incoming ID from query string
-    if (empty($_GET["id"])) {
-        http_response_code(400);
-        echo json_encode(["message" => "Missing ID"]);
-        exit;
+    // Use provided ID or fallback to $_GET['id']
+    if ($id === null) {
+        if (empty($_GET["id"])) {
+            http_response_code(400);
+            echo json_encode(["message" => "Missing ID"]);
+            exit;
+        }
+        $id = $_GET["id"];
     }
-
-    $id = $_GET["id"];
 
     // Ensure the ID is numeric
     if (!is_numeric($id)) {

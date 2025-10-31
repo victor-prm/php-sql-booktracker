@@ -31,6 +31,11 @@ bindField($stmt, ['birth_year', $body['birth_year']], ['type' => PDO::PARAM_INT]
 $stmt->execute();
 
 // 5. Re-fetch updated author
-$updatedAuthor = ensureExists('authors');
+header("Content-Type: application/json; charset=utf-8");
 http_response_code(200);
-echo json_encode($updatedAuthor['data']);
+
+$updatedAuthor = ensureExists('authors');
+echo json_encode([
+    "message" => "Author updated successfully",
+    "data" => $updatedAuthor['data']
+]);

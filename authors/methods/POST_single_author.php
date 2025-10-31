@@ -1,16 +1,16 @@
 <?php
 // 1. Validate input
 $requiredFields = ['name', 'bio', 'birth_year'];
-$missingFields = array_filter($requiredFields, fn($f) => empty($_POST[$f]));
+$missingFields = array_filter($requiredFields, fn($field) => empty($_POST[$field]));
 
-if (!empty($missingFields)) {
+/* if (!empty($missingFields)) {
     http_response_code(400);
     echo json_encode([
         "message" => "Missing field(s)",
         "fields" => $missingFields
     ]);
     exit;
-}
+} */
 
 // 2. Insert new author
 $sql_insert_author = "INSERT INTO authors (name, bio, birth_year) 
@@ -23,8 +23,11 @@ $stmt->execute();
 $author_id = $conn->lastInsertId();
 
 // 3. Return success
+header("Content-Type: application/json; charset=utf-8");
 http_response_code(201);
+
+$updatedAuthor = ensureExists('authors', $author_id);
 echo json_encode([
     "message" => "Author created successfully",
-    "author_id" => $author_id
+    "data" => $updatedAuthor['data']
 ]);

@@ -1,7 +1,4 @@
 <?php
-echo "Form data received ✅<br>";
-var_dump($_POST);
-
 // 1. Check if author exists
 $sql_check_author = "SELECT id FROM authors WHERE LOWER(TRIM(name)) = LOWER(TRIM(:author_name))";
 $stmt = $conn->prepare($sql_check_author);
@@ -63,8 +60,11 @@ if (!empty($_POST['sub_genre_ids']) && is_array($_POST['sub_genre_ids'])) {
 }
 
 // 5. Return success
+header("Content-Type: application/json; charset=utf-8");
 http_response_code(201);
+
+$updatedBook = ensureExists('books', $book_id);
 echo json_encode([
     "message" => "Book created successfully",
-    "book_id" => $book_id
+    "data" => $updatedBook['data']
 ]);

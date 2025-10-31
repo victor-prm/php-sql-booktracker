@@ -82,8 +82,11 @@ if (!empty($body['sub_genre_ids']) && is_array($body['sub_genre_ids'])) {
 }
 
 // 8. Return response
+header("Content-Type: application/json; charset=utf-8");
 http_response_code(200);
+
+$updatedBook = ensureExists('books');
 echo json_encode([
     "message" => "Book updated successfully",
-    "book_id" => $book_id
+    "data" => $updatedBook['data']
 ]);
