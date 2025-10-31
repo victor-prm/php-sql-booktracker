@@ -1,6 +1,6 @@
 <?php
 require("../db.php");
-require("../helpers.php");
+require("../helpers/data.php");
 
 // Define a base URL used for both item links and pagination links
 $base_url = 'http://localhost:8888/genretracker';

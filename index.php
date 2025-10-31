@@ -3,7 +3,9 @@ header("Content-Type: application/json; charset=utf-8");
 
 // Include database and helper functions
 require_once __DIR__ . "/db.php";
-require_once __DIR__ . "/helpers.php";
+require_once __DIR__ . "/helpers/auth.php";
+require_once __DIR__ . "/helpers/data.php";
+require_once __DIR__ . "/helpers/http.php";
 
 $resource = $_GET['resource'] ?? null;
 $method = $_SERVER['REQUEST_METHOD'];
