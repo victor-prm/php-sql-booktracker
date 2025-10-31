@@ -1,38 +1,37 @@
 <?php
-require("../db.php");
-require("../helpers.php");
+// We assume $conn, $method, and $base_url are already set by the root index.php, but I'm adding them for safety anyways
+require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../helpers.php';
 
-// Define a base URL used for both item links and pagination links
 $base_url = 'http://localhost:8888/booktracker';
+$method = $method ?? $_SERVER['REQUEST_METHOD'];
 
-//GET SINGLE (detail view)
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET["id"])) {
-    // GET /books?id=15 → get single
-    $book = ensureExists("books"); // validation + ensures 404 if not found
-    $id = $book["id"]; // safely validated numeric ID
+var_dump($conn);
 
-    include __DIR__ . '/methods/read_single_book.php';
-}
+switch ($method) {
+    case 'GET':
+        if (!empty($_GET["id"])) {
+            // Protected: single item view
+            requireRole(['viewer', 'editor']); 
+            $book = ensureExists("books");
+            $id = $book["id"];
+            include __DIR__ . '/methods/read_single_book.php';
+        } else {
+            // Public: list all books
+            include __DIR__ . '/methods/read_all_books.php';
+        }
+        break;
 
-// GET ALL (with pagination)
-elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // GET /books → get all
-    include __DIR__ . '/methods/read_all_books.php';
-}
+    case 'POST':
+    case 'PUT':
+    case 'DELETE':
+        // Protected: editors only
+        requireRole(['editor']);
+        include __DIR__ . "/methods/create_book.php";
+        break;
 
-
-
-//POST (create new book)
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    include __DIR__ . '/methods/create_book.php';
-}
-
-/* 
-//PUT
-if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-}*/
-
-//DELETE
-if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    include __DIR__ . '/methods/delete_book.php';
+    default:
+        http_response_code(405);
+        echo json_encode(['error' => 'Method not allowed']);
+        break;
 }

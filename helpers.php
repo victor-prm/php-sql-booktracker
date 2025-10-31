@@ -64,33 +64,6 @@ function ensureExists($table) {
     ];
 }
 
-function getUserRoleFromAuthHeader($conn) {
-    $headers = getallheaders();
-    $authHeader = $headers['Authorization'] ?? '';
-
-    // Check if the Authorization header exists and starts with "Bearer "
-    if (!is_string($authHeader) || stripos($authHeader, 'Bearer ') !== 0) {
-        http_response_code(401);
-        echo json_encode(["error" => "Missing or invalid Authorization header"]);
-        exit;
-    }
-
-    // Extract token
-    $token = trim(str_ireplace('Bearer ', '', $authHeader));
-
-    // Lookup in database
-    $stmt = $conn->prepare("SELECT name FROM roles WHERE token = :token LIMIT 1");
-    $stmt->execute(['token' => $token]);
-    $role = $stmt->fetchColumn();
-
-    if (!$role) {
-        http_response_code(401);
-        echo json_encode(["error" => "Invalid or expired token"]);
-        exit;
-    }
-
-    return $role;
-}
 
 function handleOptions($conn, $methods) {
     // Authenticate user
@@ -108,5 +81,54 @@ function handleOptions($conn, $methods) {
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Max-Age: 86400'); // optional: cache preflight for 1 day
     http_response_code(204);
+    exit;
+}
+
+function getUserRoleFromAuthHeader($conn, $allowPublic = true) {
+    $headers = getallheaders();
+    $authHeader = $headers['X-Authorization'] ?? ''; // Custom header from postman
+    var_dump($authHeader);
+
+    if (empty($authHeader)) {
+        return $allowPublic ? 'public' : unauthorized();
+    }
+
+    if (!str_starts_with($authHeader, 'Bearer ')) {
+        return $allowPublic ? 'public' : unauthorized();
+    }
+
+    $token = trim(str_replace('Bearer ', '', $authHeader));
+
+    $stmt = $conn->prepare("SELECT name FROM roles WHERE token = :token LIMIT 1");
+    $stmt->execute(['token' => $token]);
+    $role = $stmt->fetchColumn();
+
+    if (!$role) {
+        return $allowPublic ? 'public' : unauthorized();
+    }
+
+    return $role;
+}
+
+function requireRole(array|string $allowedRoles) {
+    global $conn; // access shared DB connection
+
+    $currentRole = getUserRoleFromAuthHeader($conn, false);
+
+    // normalize to array
+    if (!is_array($allowedRoles)) {
+        $allowedRoles = [$allowedRoles];
+    }
+
+    if (!in_array($currentRole, $allowedRoles)) {
+        http_response_code(403);
+        echo json_encode(['error' => 'Forbidden: insufficient permissions']);
+        exit;
+    }
+}
+
+function unauthorized() {
+    http_response_code(401);
+    echo json_encode(['error' => 'Missing or invalid Authorization header']);
     exit;
 }
