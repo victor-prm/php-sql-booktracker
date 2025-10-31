@@ -1,38 +1,38 @@
 <?php
-require("../db.php");
-require("../helpers.php");
+// We assume $conn, $method, and $base_url are already set by the root index.php, but I'm adding them for safety anyways
+require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../helpers/data.php';
+require_once __DIR__ . '/../helpers/http.php';
 
-// Define a base URL used for both item links and pagination links
 $base_url = 'http://localhost:8888/booktracker';
+$method = $method ?? $_SERVER['REQUEST_METHOD'];
+$lookupItem = "author";
 
-//GET SINGLE (detail view)
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET["id"])) {
-    // GET /authors?id=15 → get single
-    $author = ensureExists("authors"); // validation + ensures 404 if not found
-    $id = $author["id"]; // safely validated numeric ID
+switch ($method) {
+    case 'GET':
+        if (!empty($_GET["id"])) {
+            // Protected: Viewers and Editors only (single item view)
+            requireRole(['viewer', 'editor']);
+            $book = ensureExists("{$lookupItem}s");
+            $id = $book["id"];
+            include __DIR__ . "/methods/{$method}_single_{$lookupItem}.php";
+        } else {
+            // Public: List all books
+            include __DIR__ . "/methods/{$method}_all_{$lookupItem}s.php";
+        }
+        break;
 
-    include __DIR__ . '/methods/read_single_author.php';
-}
+    case 'POST':
+    case 'PUT':
+    case 'DELETE':
+        // Protected: Editors only (single item manipulation)
+        requireRole(['editor']);
+        include __DIR__ . "/methods/{$method}_single_{$lookupItem}.php";
+        break;
 
-// GET ALL (with pagination)
-elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // GET /authors → get all
-    include __DIR__ . '/methods/read_all_authors.php';
-}
-
-
-
-//POST (create new author)
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    include __DIR__ . '/methods/create_author.php';
-}
-
-/* 
-//PUT
-if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-}*/
-
-//DELETE
-if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    include __DIR__ . '/methods/delete_author.php';
+    default:
+        http_response_code(405);
+        echo json_encode(['error' => 'Method not allowed']);
+        break;
 }

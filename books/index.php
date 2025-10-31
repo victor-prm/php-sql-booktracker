@@ -7,18 +7,19 @@ require_once __DIR__ . '/../helpers/http.php';
 
 $base_url = 'http://localhost:8888/booktracker';
 $method = $method ?? $_SERVER['REQUEST_METHOD'];
+$lookupItem = "book";
 
 switch ($method) {
     case 'GET':
         if (!empty($_GET["id"])) {
             // Protected: Viewers and Editors only (single item view)
             requireRole(['viewer', 'editor']);
-            $book = ensureExists("books");
+            $book = ensureExists("{$lookupItem}s");
             $id = $book["id"];
-            include __DIR__ . "/methods/{$method}_single_book.php";
+            include __DIR__ . "/methods/{$method}_single_{$lookupItem}.php";
         } else {
             // Public: List all books
-            include __DIR__ . "/methods/{$method}_all_books.php";
+            include __DIR__ . "/methods/{$method}_all_{$lookupItem}s.php";
         }
         break;
 
@@ -27,7 +28,7 @@ switch ($method) {
     case 'DELETE':
         // Protected: Editors only (single item manipulation)
         requireRole(['editor']);
-        include __DIR__ . "/methods/{$method}_single_book.php";
+        include __DIR__ . "/methods/{$method}_single_{$lookupItem}.php";
         break;
 
     default:
