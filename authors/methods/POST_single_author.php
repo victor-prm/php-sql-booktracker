@@ -3,14 +3,14 @@
 $requiredFields = ['name', 'bio', 'birth_year'];
 $missingFields = array_filter($requiredFields, fn($field) => empty($_POST[$field]));
 
-/* if (!empty($missingFields)) {
+if (!empty($missingFields)) {
     http_response_code(400);
     echo json_encode([
         "message" => "Missing field(s)",
         "fields" => $missingFields
     ]);
     exit;
-} */
+}
 
 // 2. Insert new author
 $sql_insert_author = "INSERT INTO authors (name, bio, birth_year) 

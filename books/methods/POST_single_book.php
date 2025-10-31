@@ -1,5 +1,20 @@
 <?php
-// 1. Check if author exists
+// 1. Validate Input
+$requiredFields = ['title', 'year', 'description', 'pages', 'main_genre', 'status_id', 'author_name'];
+$missingFields = array_filter($requiredFields, fn($field) => empty($_POST[$field]));
+
+if (!empty($missingFields)) {
+    http_response_code(400);
+    header("Content-Type: application/json; charset=utf-8");
+    echo json_encode([
+        "message" => "Missing field(s)",
+        "fields" => $missingFields
+    ]);
+    exit;
+}
+
+
+// 2. Check if author exists
 $sql_check_author = "SELECT id FROM authors WHERE LOWER(TRIM(name)) = LOWER(TRIM(:author_name))";
 $stmt = $conn->prepare($sql_check_author);
 bindField($stmt, ["author_name"]);
@@ -17,7 +32,7 @@ if ($author) {
     $author_id = $conn->lastInsertId();
 }
 
-// 2. Insert new book
+// 3. Insert new book
 $sql_insert_book = "INSERT INTO books (
     title, year, description, pages, frontpage_img, main_genre_id, status_id
 ) VALUES (
@@ -39,14 +54,14 @@ bindField($stmt, ["status_id"], ["type" => PDO::PARAM_INT]);
 $stmt->execute();
 $book_id = $conn->lastInsertId();
 
-// 3. Link the author
+// 4. Link the author
 $sql_link_author = "INSERT INTO book_authors (book_id, author_id) VALUES (:book_id, :author_id)";
 $stmt = $conn->prepare($sql_link_author);
 $stmt->bindValue(":book_id", $book_id, PDO::PARAM_INT);
 $stmt->bindValue(":author_id", $author_id, PDO::PARAM_INT);
 $stmt->execute();
 
-// 4. Link sub-genres if provided
+// 5. Link sub-genres if provided
 if (!empty($_POST['sub_genre_ids']) && is_array($_POST['sub_genre_ids'])) {
     $sql_link_genre = "INSERT INTO book_genres (book_id, genre_id) VALUES (:book_id, :genre_id)";
     $stmt = $conn->prepare($sql_link_genre);
@@ -59,7 +74,7 @@ if (!empty($_POST['sub_genre_ids']) && is_array($_POST['sub_genre_ids'])) {
     }
 }
 
-// 5. Return success
+// 6. Return success
 header("Content-Type: application/json; charset=utf-8");
 http_response_code(201);
 
