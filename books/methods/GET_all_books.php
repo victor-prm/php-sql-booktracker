@@ -48,30 +48,8 @@ if ($includeGenres) {
 //Apply search and filters
 $whereParts = [];
 $params = [];
-
-// Example: search by title
-if (!empty($_GET['q'])) {
-    $whereParts[] = "b.title LIKE :search";
-    $params['search'] = '%' . $_GET['q'] . '%';
-}
-
-// Example: filter by main genre
-if (!empty($_GET['genre_id']) && is_numeric($_GET['genre_id'])) {
-    $whereParts[] = "b.main_genre_id = :genre_id";
-    $params['genre_id'] = (int)$_GET['genre_id'];
-}
-
-// Example: filter by author
-if ($includeAuthors && !empty($_GET['author_id']) && is_numeric($_GET['author_id'])) {
-    $whereParts[] = "a.id = :author_id";
-    $params['author_id'] = (int)$_GET['author_id'];
-}
-
-// Build WHERE clause
-$whereSQL = '';
-if (!empty($whereParts)) {
-    $whereSQL = ' WHERE ' . implode(' AND ', $whereParts);
-}
+applyBookSearchAndFilters($whereParts, $params, $includeAuthors);
+$whereSQL = buildWhereClause($whereParts);
 
 // Final concatenated SQL
 $sql_get_info = $select . $from . $whereSQL . " LIMIT :limit OFFSET :offset";

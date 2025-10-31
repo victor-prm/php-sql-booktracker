@@ -16,24 +16,8 @@ $total = $count_stmt->fetch(PDO::FETCH_ASSOC)['total'];
 // Apply search and filters
 $whereParts = [];
 $params = [];
-
-// Example: search by author name
-if (!empty($_GET['q'])) {
-    $whereParts[] = "a.name LIKE :search";
-    $params['search'] = '%' . $_GET['q'] . '%';
-}
-
-// Example: filter by birth year (optional if column exists)
-if (!empty($_GET['birth_year']) && is_numeric($_GET['birth_year'])) {
-    $whereParts[] = "a.birth_year = :birth_year";
-    $params['birth_year'] = (int)$_GET['birth_year'];
-}
-
-// Build WHERE clause
-$whereSQL = '';
-if (!empty($whereParts)) {
-    $whereSQL = ' WHERE ' . implode(' AND ', $whereParts);
-}
+applyAuthorSearchAndFilters($whereParts, $params);
+$whereSQL = buildWhereClause($whereParts);
 
 // Final SQL with pagination
 $sql_get_info = "SELECT a.id, a.name, a.birth_year, a.bio 
