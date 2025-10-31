@@ -6,7 +6,7 @@ $includeGenres      = in_array('genres', $expand);
 $includeAuthors     = in_array('authors', $expand);
 $includeImg         = in_array('img', $expand);
 $includeYear        = in_array('year', $expand);
-$includeDescription = in_array('description', $expand) || !empty($_GET['q']);
+$includeDescription = in_array('description', $expand);
 
 // Default pagination values
 $limit = isset($_GET['limit']) ? intval($_GET['limit'], 10) : 10;   // default 10
@@ -27,7 +27,7 @@ $select = "SELECT b.id, b.title";
 $from   = " FROM books b";
 
 // Only include description if searching
-if ($includeDescription) {
+if ($includeDescription || !empty($_GET['q'])) {
     $select .= ", b.description";
 }
 
@@ -109,17 +109,25 @@ foreach ($results as $row) {
     if (!isset($books[$id])) {
         $books[$id] = [
             "title" => $row['title'],
-            "url" => "$base_url/books?id=$id",
-            "match_fields" => $matchFields
+            "url"   => "$base_url/books?id=$id"
         ];
 
-        // Initialize empty arrays only if needed
+        // Only add match_fields if query exists
+        if (!empty($_GET['q'])) {
+            $books[$id]['match_fields'] = $matchFields;
+        }
+        // Conditionally include description if requested via expand
+        if ($includeDescription) {
+            $books[$id]['description'] = $row['description'] ?? null;
+        }
+
+        // Initialize other arrays
         if ($includeImg) $books[$id]['frontpage_img'] = null;
         if ($includeAuthors) $books[$id]['authors'] = [];
         if ($includeGenres) $books[$id]['genres'] = [];
         if ($includeYear) $books[$id]['year'] = null;
 
-        // Keep track of added authors/genres per book
+        // Tracking arrays
         $books[$id]['_addedAuthors'] = [];
         $books[$id]['_addedGenres'] = [];
     }
