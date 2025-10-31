@@ -9,6 +9,12 @@ $base_url = 'http://localhost:8888/booktracker';
 $method = $method ?? $_SERVER['REQUEST_METHOD'];
 $lookupItem = "genre";
 
+//Show options
+if ($method === 'OPTIONS') {
+    handleOptions($conn, ['GET']);
+}
+
+//Methods redirect switch
 switch ($method) {
     case 'GET':
         if (!empty($_GET["id"])) {

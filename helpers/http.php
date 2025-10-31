@@ -2,6 +2,7 @@
 function handleOptions($conn, $methods) {
     // Authenticate user
     $role = getUserRoleFromAuthHeader($conn); // now requires DB connection
+    var_dump($role);
 
     // Restrict allowed methods for viewers
     if ($role !== 'editor') {
