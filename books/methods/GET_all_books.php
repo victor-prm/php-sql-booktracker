@@ -2,10 +2,11 @@
 // Options for expanded object e.g. for grid view in frontend
 $expand = isset($_GET['expand']) ? explode(',', $_GET['expand']) : [];
 
-$includeGenres = in_array('genres', $expand) || !empty($_GET['sub_genre_id']);
-$includeAuthors = in_array('authors', $expand) || !empty($_GET['author_id']);
-$includeImg     = in_array('img', $expand);
-$includeYear    = in_array('year', $expand);
+$includeGenres      = in_array('genres', $expand);
+$includeAuthors     = in_array('authors', $expand);
+$includeImg         = in_array('img', $expand);
+$includeYear        = in_array('year', $expand);
+$includeDescription = in_array('description', $expand) || !empty($_GET['q']);
 
 // Default pagination values
 $limit = isset($_GET['limit']) ? intval($_GET['limit'], 10) : 10;   // default 10
@@ -24,6 +25,11 @@ $total = $count_stmt->fetch(PDO::FETCH_ASSOC)['total'];
 // Main query with LIMIT + OFFSET + EXPAND (conditional query)
 $select = "SELECT b.id, b.title";
 $from   = " FROM books b";
+
+// Only include description if searching
+if ($includeDescription) {
+    $select .= ", b.description";
+}
 
 // Check if image should be included
 if ($includeImg) $select .= ", b.frontpage_img";
@@ -79,16 +85,32 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $books = [];
 
-
 // Build structured array of books with their authors/genres
 foreach ($results as $row) {
     $id = $row['id'];
+    $matchFields = [];
+
+    // Check which fields matched the query
+    if (!empty($_GET['q'])) {
+        $q = strtolower($_GET['q']);
+
+        // Check title
+        if (strpos(strtolower($row['title']), $q) === 0 || strpos(strtolower($row['title']), ' ' . $q) !== false) {
+            $matchFields[] = 'title';
+        }
+
+        // Check description
+        if (!empty($row['description']) && (strpos(strtolower($row['description']), $q) === 0 || strpos(strtolower($row['description']), ' ' . $q) !== false)) {
+            $matchFields[] = 'description';
+        }
+    }
 
     // Always include minimal info
     if (!isset($books[$id])) {
         $books[$id] = [
             "title" => $row['title'],
-            "url" => "$base_url/books?id=$id"
+            "url" => "$base_url/books?id=$id",
+            "match_fields" => $matchFields
         ];
 
         // Initialize empty arrays only if needed
@@ -102,7 +124,7 @@ foreach ($results as $row) {
         $books[$id]['_addedGenres'] = [];
     }
 
-    // Conditionally add expanded fields
+    // Conditionally add expanded fields (authors, genres, img, year) as before...
     if ($includeImg && !empty($row['frontpage_img'])) {
         $books[$id]['frontpage_img'] = $row['frontpage_img'];
     }
@@ -120,10 +142,8 @@ foreach ($results as $row) {
     }
 
     if ($includeGenres) {
-        // Initialize genres array
         if (!isset($books[$id]['genres'])) $books[$id]['genres'] = [];
 
-        // Add main genre first
         if (!empty($row['main_genre_id'])) {
             $mainGenreUrl = "$base_url/genres?id=" . $row['main_genre_id'];
             $books[$id]['genres'][] = [
@@ -132,10 +152,8 @@ foreach ($results as $row) {
             ];
         }
 
-        // Add subgenres
         if (!empty($row['genre_id'])) {
             $subGenreUrl = "$base_url/genres?id=" . $row['genre_id'];
-            // Avoid duplicates
             $existingUrls = array_column($books[$id]['genres'], 'url');
             if (!in_array($subGenreUrl, $existingUrls)) {
                 $books[$id]['genres'][] = [

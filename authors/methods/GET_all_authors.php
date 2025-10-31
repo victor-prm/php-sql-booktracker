@@ -28,7 +28,7 @@ $stmt = $conn->prepare($sql_get_info);
 
 // Bind search/filter parameters
 foreach ($params as $key => $value) {
-    if ($key === 'search') {
+    if (in_array($key, ['search_start', 'search_middle', 'name', 'bio'])) {
         $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
     } else {
         $stmt->bindValue(":$key", $value, PDO::PARAM_INT);
@@ -47,11 +47,27 @@ $authors = [];
 // Build structured output
 foreach ($results as $row) {
     $id = $row['id'];
+    $matchFields = [];
+
+    // Check for matches if q is provided
+    if (!empty($_GET['q'])) {
+        $q = strtolower($_GET['q']);
+
+        // Check name
+        if (strpos(strtolower($row['name']), $q) === 0 || strpos(strtolower($row['name']), ' ' . $q) !== false) {
+            $matchFields[] = 'name';
+        }
+
+        // Check bio (if exists)
+        if (!empty($row['bio']) && (strpos(strtolower($row['bio']), $q) === 0 || strpos(strtolower($row['bio']), ' ' . $q) !== false)) {
+            $matchFields[] = 'bio';
+        }
+    }
+
     $authors[] = [
-        "id" => $id,
         "name" => $row['name'],
-        "birth_year" => $row['birth_year'] ?? null,
-        "url" => "$base_url/authors?id=$id"
+        "url" => "$base_url/authors?id=$id",
+        "match_fields" => $matchFields // NEW
     ];
 }
 

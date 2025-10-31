@@ -123,13 +123,23 @@ function applyBookSearchAndFilters(&$whereParts, &$params, $includeAuthors = fal
 
 //Apply search and filters for authors
 function applyAuthorSearchAndFilters(array &$whereParts, array &$params) {
-    // Search by author name
+    // Free-text search across multiple columns
     if (!empty($_GET['q'])) {
-        $whereParts[] = "a.name LIKE :search";
-        $params['search'] = '%' . $_GET['q'] . '%';
+        $whereParts[] = "(
+            a.name LIKE :search_start OR a.name LIKE :search_middle OR
+            a.bio  LIKE :search_start OR a.bio  LIKE :search_middle
+        )";
+        $params['search_start']  = $_GET['q'] . '%';        // match start of field
+        $params['search_middle'] = '% ' . $_GET['q'] . '%'; // match after a space
     }
 
-    // Search by bio (optional)
+    // Filter specifically by name
+    if (!empty($_GET['name'])) {
+        $whereParts[] = "a.name LIKE :name";
+        $params['name'] = '%' . $_GET['name'] . '%';
+    }
+
+    // Filter specifically by bio
     if (!empty($_GET['bio'])) {
         $whereParts[] = "a.bio LIKE :bio";
         $params['bio'] = '%' . $_GET['bio'] . '%';
@@ -138,7 +148,7 @@ function applyAuthorSearchAndFilters(array &$whereParts, array &$params) {
     // Filter by birth year
     if (!empty($_GET['birth_year']) && is_numeric($_GET['birth_year'])) {
         $whereParts[] = "a.birth_year = :birth_year";
-        $params['birth_year'] = (int)$_GET['birth_year'];
+        $params['birth_year'] = (int) $_GET['birth_year'];
     }
 }
 
