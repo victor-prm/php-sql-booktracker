@@ -3,20 +3,19 @@
 $author = ensureExists("authors", $id); // pass $id explicitly
 $data = $author['data']; // fetched row
 
-// Now fetch the product with its joined media
 // Single query fetching author + all their books
-$sql = "SELECT
-a.id AS author_id,
-a.name,
-a.bio,
-a.birth_year,
-b.id AS book_id,
-b.title AS book_title
-FROM authors a
-LEFT JOIN book_authors ba ON a.id = ba.author_id
-LEFT JOIN books b ON ba.book_id = b.id
-WHERE a.id = :id
-ORDER BY b.title
+$sql = "SELECT DISTINCT
+        a.id AS author_id,
+        a.name,
+        a.bio,
+        a.birth_year,
+        b.id AS book_id,
+        b.title AS book_title
+        FROM authors a
+        LEFT JOIN book_authors ba ON a.id = ba.author_id
+        LEFT JOIN books b ON ba.book_id = b.id
+        WHERE a.id = :id
+        ORDER BY b.title
 ";
 
 //Query for main object
@@ -54,12 +53,10 @@ $output = [
 ];
 
 foreach ($results as $row) {
-    if (!empty($row['book_id'])) {
-        $output['books'][] = [
-            "title" => $row['book_title'],
-            "url" => "$base_url/books?id=" . $row['book_id']
-        ];
-    }
+    $output['books'][] = [
+        "title" => $row['book_title'],
+        "url"   => "$base_url/books?id=" . $row['book_id']
+    ];
 }
 
 header("Content-Type: application/json; charset=utf-8");

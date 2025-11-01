@@ -4,20 +4,20 @@ $genre = ensureExists("genres", $id);
 $data = $genre['data'];
 
 // Fetch all books that have this genre either as main or subgenre
-$sql = "
-    SELECT DISTINCT
+$sql = "SELECT DISTINCT
         g.id AS genre_id,
         g.name AS genre_name,
         b.id AS book_id,
         b.title AS book_title
-    FROM genres g
-    LEFT JOIN book_genres bg ON g.id = bg.genre_id
-    LEFT JOIN books b 
+        FROM genres g
+        LEFT JOIN book_genres bg ON g.id = bg.genre_id
+        LEFT JOIN books b 
         ON b.main_genre_id = g.id 
         OR b.id = bg.book_id
-    WHERE g.id = :id
-    ORDER BY b.title
-";
+        WHERE g.id = :id
+        ORDER BY b.title
+        ";
+
 //Query for main object
 $stmt = $conn->prepare($sql);
 $stmt->execute(['id' => $id]);

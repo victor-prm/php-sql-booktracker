@@ -37,14 +37,14 @@ if (!$author_id) {
 
 // 5. Update main book record
 $sql_update_book = "UPDATE books SET 
-    title = :title,
-    year = :year,
-    description = :description,
-    pages = :pages,
-    frontpage_img = :frontpage_img,
-    main_genre_id = :main_genre_id,
-    status_id = :status_id
-WHERE id = :id";
+                    title = :title,
+                    year = :year,
+                    description = :description,
+                    pages = :pages,
+                    frontpage_img = :frontpage_img,
+                    main_genre_id = :main_genre_id,
+                    status_id = :status_id
+                    WHERE id = :id";
 
 $stmt = $conn->prepare($sql_update_book);
 bindField($stmt, ["id", $book_id], ["type" => PDO::PARAM_INT]);

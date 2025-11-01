@@ -5,30 +5,30 @@ $data = $book['data']; // fetched row
 
 // Now fetch the product with its joined media
 $sql = "SELECT
-    b.id AS book_id,
-    b.title,
-    b.year,
-    b.description,
-    b.pages,
-    b.frontpage_img,
-    b.main_genre_id,
-    mg.name AS main_genre,
-    b.status_id,
-    s.name AS status,
-    a.id AS author_id,
-    a.name AS author_name,
-    g.id AS genre_id,
-    g.name AS genre_name
-    FROM books b
-    LEFT JOIN reading_status s ON b.status_id = s.id
-    LEFT JOIN genres mg ON b.main_genre_id = mg.id
-    LEFT JOIN book_authors ba ON b.id = ba.book_id
-    LEFT JOIN authors a ON ba.author_id = a.id
-    LEFT JOIN book_genres bg ON b.id = bg.book_id
-    LEFT JOIN genres g ON bg.genre_id = g.id
-    WHERE b.id = :id
-    ORDER BY a.name, g.name
-    ";
+        b.id AS book_id,
+        b.title,
+        b.year,
+        b.description,
+        b.pages,
+        b.frontpage_img,
+        b.main_genre_id,
+        mg.name AS main_genre,
+        b.status_id,
+        s.name AS status,
+        a.id AS author_id,
+        a.name AS author_name,
+        g.id AS genre_id,
+        g.name AS genre_name
+        FROM books b
+        LEFT JOIN reading_status s ON b.status_id = s.id
+        LEFT JOIN genres mg ON b.main_genre_id = mg.id
+        LEFT JOIN book_authors ba ON b.id = ba.book_id
+        LEFT JOIN authors a ON ba.author_id = a.id
+        LEFT JOIN book_genres bg ON b.id = bg.book_id
+        LEFT JOIN genres g ON bg.genre_id = g.id
+        WHERE b.id = :id
+        ORDER BY a.name, g.name
+        ";
 
 //Query for main object
 $stmt = $conn->prepare($sql);
