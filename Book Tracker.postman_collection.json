@@ -4,7 +4,7 @@
 		"name": "Book Tracker",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "49559034",
-		"_collection_link": "https://victorpabb-9255250.postman.co/workspace/Victor-P.'s-Workspace~21c7c0c9-c79b-415d-8c34-b1394dd456fc/collection/49559034-6c083cfc-53a4-401c-91e4-4730649bcbe7?action=share&source=collection_link&creator=49559034"
+		"_collection_link": "https://victorpabb-9255250.postman.co/workspace/21c7c0c9-c79b-415d-8c34-b1394dd456fc/collection/49559034-6c083cfc-53a4-401c-91e4-4730649bcbe7?action=share&source=collection_link&creator=49559034"
 	},
 	"item": [
 		{
@@ -29,24 +29,57 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/books?expand=genres,authors&offset=20",
-							"protocol": "http",
+							"raw": "{{base_url}}/books?offset=20&limit=3",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
+								"books"
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "20"
+								},
+								{
+									"key": "limit",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Books - Expanded",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Authorization",
+								"value": "Bearer EDITOR_TOKEN_123",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "X-Authorization",
+								"value": "Bearer ADMIN_TOKEN_456",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/books?expand=genres,authors,frontpage_img,year,description",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
 								"books"
 							],
 							"query": [
 								{
 									"key": "expand",
-									"value": "genres,authors"
-								},
-								{
-									"key": "offset",
-									"value": "20"
+									"value": "genres,authors,frontpage_img,year,description"
 								}
 							]
 						}
@@ -72,14 +105,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/books?main_genre_id=11&sub_genre_id=14",
-							"protocol": "http",
+							"raw": "{{base_url}}/books?main_genre_id=11&sub_genre_id=14",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"books"
 							],
 							"query": [
@@ -115,14 +145,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/books?q=society",
-							"protocol": "http",
+							"raw": "{{base_url}}/books?q=society",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"books"
 							],
 							"query": [
@@ -157,14 +184,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/books?id=9",
-							"protocol": "http",
+							"raw": "{{base_url}}/books?id=9",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"books"
 							],
 							"query": [
@@ -253,14 +277,11 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8888/booktracker/books/",
-							"protocol": "http",
+							"raw": "{{base_url}}/books/",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"books",
 								""
 							]
@@ -344,20 +365,17 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8888/booktracker/books?id=73",
-							"protocol": "http",
+							"raw": "{{base_url}}/books?id=74",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"books"
 							],
 							"query": [
 								{
 									"key": "id",
-									"value": "73"
+									"value": "74"
 								}
 							]
 						}
@@ -385,20 +403,17 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/books?id=72",
-							"protocol": "http",
+							"raw": "{{base_url}}/books?id=74",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"books"
 							],
 							"query": [
 								{
 									"key": "id",
-									"value": "72"
+									"value": "74"
 								}
 							]
 						}
@@ -416,8 +431,7 @@
 							{
 								"key": "X-Authorization",
 								"value": "Bearer EDITOR_TOKEN_123",
-								"type": "text",
-								"disabled": true
+								"type": "text"
 							},
 							{
 								"key": "X-Authorization",
@@ -427,21 +441,19 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/books",
-							"protocol": "http",
+							"raw": "{{base_url}}/books",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"books"
 							]
 						}
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Manage and retrieve information about books in the API. Each book includes metadata such as title, authors, main genre, subgenres, publication year, page count, reading status, frontpage image, and summary. Endpoints allow listing, fetching single books, and (for authorized users) creating, updating, or deleting books."
 		},
 		{
 			"name": "Authors",
@@ -465,14 +477,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/authors",
-							"protocol": "http",
+							"raw": "{{base_url}}/authors",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"authors"
 							]
 						}
@@ -498,14 +507,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/authors?birth_year=1892",
-							"protocol": "http",
+							"raw": "{{base_url}}/authors?birth_year=1892",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"authors"
 							],
 							"query": [
@@ -537,14 +543,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/authors?q=her",
-							"protocol": "http",
+							"raw": "{{base_url}}/authors?q=her",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"authors"
 							],
 							"query": [
@@ -576,20 +579,17 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/authors?id=5",
-							"protocol": "http",
+							"raw": "{{base_url}}/authors?id=4",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"authors"
 							],
 							"query": [
 								{
 									"key": "id",
-									"value": "5"
+									"value": "4"
 								}
 							]
 						}
@@ -607,13 +607,13 @@
 							{
 								"key": "X-Authorization",
 								"value": "Bearer EDITOR_TOKEN_123",
-								"type": "text",
-								"disabled": true
+								"type": "text"
 							},
 							{
 								"key": "X-Authorization",
 								"value": "Bearer ADMIN_TOKEN_456",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -637,14 +637,11 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8888/booktracker/authors/",
-							"protocol": "http",
+							"raw": "{{base_url}}/authors/",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"authors",
 								""
 							]
@@ -663,13 +660,13 @@
 							{
 								"key": "X-Authorization",
 								"value": "Bearer EDITOR_TOKEN_123",
-								"type": "text",
-								"disabled": true
+								"type": "text"
 							},
 							{
 								"key": "X-Authorization",
 								"value": "Bearer ADMIN_TOKEN_456",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
@@ -677,12 +674,12 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "Plato",
+									"value": "EDIT Plato",
 									"type": "text"
 								},
 								{
 									"key": "bio",
-									"value": "Ancient Greek philosopher, a student of Socrates, and the teacher of Aristotle. He founded the Academy in Athens, one of the earliest institutions of higher learning, and wrote extensively on a wide range of subjects, including metaphysics, epistemology, and politics.",
+									"value": "EDIT Ancient Greek philosopher, a student of Socrates, and the teacher of Aristotle. He founded the Academy in Athens, one of the earliest institutions of higher learning, and wrote extensively on a wide range of subjects, including metaphysics, epistemology, and politics.",
 									"type": "text"
 								},
 								{
@@ -693,20 +690,17 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8888/booktracker/authors?id=50",
-							"protocol": "http",
+							"raw": "{{base_url}}/authors?id=71",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"authors"
 							],
 							"query": [
 								{
 									"key": "id",
-									"value": "50"
+									"value": "71"
 								}
 							]
 						}
@@ -724,30 +718,27 @@
 							{
 								"key": "X-Authorization",
 								"value": "Bearer EDITOR_TOKEN_123",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							},
 							{
 								"key": "X-Authorization",
 								"value": "Bearer ADMIN_TOKEN_456",
-								"type": "text",
-								"disabled": true
+								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/authors?id=46",
-							"protocol": "http",
+							"raw": "{{base_url}}/authors?id=71",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"authors"
 							],
 							"query": [
 								{
 									"key": "id",
-									"value": "46"
+									"value": "71"
 								}
 							]
 						}
@@ -775,21 +766,19 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/authors",
-							"protocol": "http",
+							"raw": "{{base_url}}/authors",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"authors"
 							]
 						}
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Manage and retrieve author information. Each author entry includes name, biography, birth year, and a list of their associated books. Endpoints allow listing all authors, fetching details for a single author, and (for authorized users) adding or updating author records."
 		},
 		{
 			"name": "Genres",
@@ -813,14 +802,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/genres",
-							"protocol": "http",
+							"raw": "{{base_url}}/genres",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"genres"
 							]
 						}
@@ -846,14 +832,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/genres?id=5",
-							"protocol": "http",
+							"raw": "{{base_url}}/genres?id=5",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"genres"
 							],
 							"query": [
@@ -887,21 +870,49 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8888/booktracker/genres",
-							"protocol": "http",
+							"raw": "{{base_url}}/genres",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8888",
 							"path": [
-								"booktracker",
 								"genres"
 							]
 						}
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Manage and retrieve genre information for books. Each genre includes its name and a list of books associated with it, either as main genre or subgenre. Endpoints allow listing all genres, fetching details for a single genre, and browsing books by genre."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8888/booktracker"
 		}
 	]
 }
