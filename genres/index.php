@@ -17,14 +17,12 @@ if ($method === 'OPTIONS') {
 //Methods redirect switch
 switch ($method) {
     case 'GET':
+        // All GET requests are public, no requireRole needed
         if (!empty($_GET["id"])) {
-            // Protected: Viewers and Editors only (single item view)
-            requireRole(['viewer', 'editor']);
             $book = ensureExists("{$lookupItem}s");
             $id = $book["id"];
             include __DIR__ . "/methods/{$method}_single_{$lookupItem}.php";
         } else {
-            // Public: List all items
             include __DIR__ . "/methods/{$method}_all_{$lookupItem}s.php";
         }
         break;

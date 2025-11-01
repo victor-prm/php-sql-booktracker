@@ -1,21 +1,23 @@
 <?php
 // $id is already set from the router
-$genre = ensureExists("genres", $id); // pass $id explicitly
-$data = $genre['data']; // fetched row
+$genre = ensureExists("genres", $id);
+$data = $genre['data'];
 
-// Now fetch the product with its joined media
-// Single query fetching genre + all their books
-$sql = "SELECT
-    g.id AS genre_id,
-    g.name,
-    b.id AS book_id,
-    b.title AS book_title
-FROM genres g
-LEFT JOIN book_genres bg ON g.id = bg.genre_id
-LEFT JOIN books b ON bg.book_id = b.id
-WHERE g.id = :id
-ORDER BY b.title";
-
+// Fetch all books that have this genre either as main or subgenre
+$sql = "
+    SELECT DISTINCT
+        g.id AS genre_id,
+        g.name AS genre_name,
+        b.id AS book_id,
+        b.title AS book_title
+    FROM genres g
+    LEFT JOIN book_genres bg ON g.id = bg.genre_id
+    LEFT JOIN books b 
+        ON b.main_genre_id = g.id 
+        OR b.id = bg.book_id
+    WHERE g.id = :id
+    ORDER BY b.title
+";
 //Query for main object
 $stmt = $conn->prepare($sql);
 $stmt->execute(['id' => $id]);
@@ -39,7 +41,7 @@ $next = $stmtNext->fetch(PDO::FETCH_ASSOC);
 // Build output
 $output = [
     "id" => $results[0]['genre_id'],
-    "name" => $results[0]['name'],
+    "name" => $results[0]['genre_name'],
     "books" => [],
     /* "link" => "$base_url/genres?id=$id", */
     "navigation" => [
