@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "6c083cfc-53a4-401c-91e4-4730649bcbe7",
 		"name": "Book Tracker",
+		"description": "A RESTful API for managing books, authors, and genres. It allows clients to:\n\n- Retrieve lists of books, authors, and genres with optional pagination.\n    \n- View detailed information about a single book, author, or genre.\n    \n- Add or update books and authors (editor/admin only).\n    \n- Delete books (admin only).\n    \n\nAll GET requests are publicly accessible. Modifying data is restricted based on user roles: **editor** for creating/updating and **admin** for deletion. Each resource includes hypermedia links for easy navigation between previous and next items.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "49559034",
 		"_collection_link": "https://victorpabb-9255250.postman.co/workspace/21c7c0c9-c79b-415d-8c34-b1394dd456fc/collection/49559034-6c083cfc-53a4-401c-91e4-4730649bcbe7?action=share&source=collection_link&creator=49559034"
@@ -453,7 +454,7 @@
 					"response": []
 				}
 			],
-			"description": "Manage and retrieve information about books in the API. Each book includes metadata such as title, authors, main genre, subgenres, publication year, page count, reading status, frontpage image, and summary. Endpoints allow listing, fetching single books, and (for authorized users) creating, updating, or deleting books."
+			"description": "Manage and retrieve information about books in the API. Each book includes expandable metadata such as title, authors, main genre, subgenres, publication year, page count, reading status, frontpage image, and summary. Endpoints allow listing, fetching single books, and (for authorized users) creating, updating, or deleting books."
 		},
 		{
 			"name": "Authors",
