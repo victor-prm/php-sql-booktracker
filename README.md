@@ -18,8 +18,8 @@ All GET requests are publicly accessible. Modifying data is restricted based on 
 | Type | Key | Value |
 |---|---|---|
 | <img src="https://img.shields.io/badge/VARIABLE-darkslategrey?style=flat-square&rounded=true" alt="VARIABLE" style="height:18px; vertical-align:middle; margin-right:2px;"> | `base_url` | `http://localhost:8888/booktracker` |
-| <img src="https://img.shields.io/badge/HEADER-orange?style=flat-square&rounded=true" alt="HEADER" style="height:18px; vertical-align:middle; margin-right:2px;"> | `X-Authorization` | `Bearer EDITOR_TOKEN` |
-| <img src="https://img.shields.io/badge/HEADER-orange?style=flat-square&rounded=true" alt="HEADER" style="height:18px; vertical-align:middle; margin-right:2px;"> | `X-Authorization` | `Bearer ADMIN_TOKEN` |
+| <img src="https://img.shields.io/badge/HEADER-orange?style=flat-square&rounded=true" alt="HEADER" style="height:18px; vertical-align:middle; margin-right:2px;"> | `X-Authorization` | `Bearer EDITOR_TOKEN_123` |
+| <img src="https://img.shields.io/badge/HEADER-orange?style=flat-square&rounded=true" alt="HEADER" style="height:18px; vertical-align:middle; margin-right:2px;"> | `X-Authorization` | `Bearer ADMIN_TOKEN_456` |
 
 
 ## 📁 1. Books endpoint
