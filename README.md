@@ -28,51 +28,523 @@ All GET requests are publicly accessible. Modifying data is restricted based on 
 
 Manage and retrieve information about books in the API. Each book includes expandable metadata such as title, authors, main genre, subgenres, publication year, page count, reading status, frontpage image, and summary. Endpoints allow listing, fetching single books, and (for authorized users) creating, updating, or deleting books.
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>All Books - Paginated</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span></span><code>/books?offset=20&limit=3</code></div></div>
+**1. All Books - Paginated** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>All Books - Expanded</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span></span><code>/books?expand=genres,authors,frontpage_img,year,description</code></div></div>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>All Books - Filter</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span></span><code>/books?main_genre_id=11&sub_genre_id=14</code></div></div>
+↳ <span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span> `/books?offset=20&limit=3`
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>All Books - Search</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span></span><code>/books?q=society</code></div></div>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>Single Book</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span></span><code>/books?id=9</code></div></div>
+---
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>New Book</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkKhaki;border:1px solid DarkKhaki;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Editor</span><span style="display:inline-block;background:transparent;color:Peru;border:1px solid Peru;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Admin</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:goldenrod; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">POST</span></span><code>/books/</code></div></div>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>Edit Book</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkKhaki;border:1px solid DarkKhaki;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Editor</span><span style="display:inline-block;background:transparent;color:Peru;border:1px solid Peru;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Admin</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:royalblue; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">PUT</span></span><code>/books?id=74</code></div></div>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>Delete Book</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:Peru;border:1px solid Peru;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Admin</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:salmon; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">DELETE</span></span><code>/books?id=74</code></div></div>
+**2. All Books - Expanded** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>All Books</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:deeppink; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">OPTIONS</span></span><code>/books</code></div></div>
+
+↳ <span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span> `/books?expand=genres,authors,frontpage_img,year,description`
+
+
+---
+
+
+
+**3. All Books - Filter** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
+
+
+↳ <span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span> `/books?main_genre_id=11&sub_genre_id=14`
+
+
+---
+
+
+
+**4. All Books - Search** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
+
+
+↳ <span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span> `/books?q=society`
+
+
+---
+
+
+
+**5. Single Book** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
+
+
+↳ <span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span> `/books?id=9`
+
+
+---
+
+
+
+**6. New Book** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkKhaki;
+            border:1px solid DarkKhaki;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Editor</span><span style="
+            display:inline-block;
+            background:transparent;
+            color:Peru;
+            border:1px solid Peru;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Admin</span></span>
+
+
+↳ <span style=" display:inline-block; background:goldenrod; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">POST</span> `/books/`
+
+
+---
+
+
+
+**7. Edit Book** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkKhaki;
+            border:1px solid DarkKhaki;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Editor</span><span style="
+            display:inline-block;
+            background:transparent;
+            color:Peru;
+            border:1px solid Peru;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Admin</span></span>
+
+
+↳ <span style=" display:inline-block; background:royalblue; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">PUT</span> `/books?id=74`
+
+
+---
+
+
+
+**8. Delete Book** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:Peru;
+            border:1px solid Peru;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Admin</span></span>
+
+
+↳ <span style=" display:inline-block; background:salmon; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">DELETE</span> `/books?id=74`
+
+
+---
+
+
+
+**9. All Books** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
+
+
+↳ <span style=" display:inline-block; background:deeppink; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">OPTIONS</span> `/books`
+
+
+---
+
+
 
 ## 📁 2. Authors endpoint
 
 Manage and retrieve author information. Each author entry includes name, biography, birth year, and a list of their associated books. Endpoints allow listing all authors, fetching details for a single author, and (for authorized users) adding or updating author records.
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>All Authors - Paginated</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span></span><code>/authors</code></div></div>
+**1. All Authors - Paginated** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>All Authors - Filter</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span></span><code>/authors?birth_year=1892</code></div></div>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>All Authors - Search</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span></span><code>/authors?q=her</code></div></div>
+↳ <span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span> `/authors`
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>Single Author</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span></span><code>/authors?id=4</code></div></div>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>New Author</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkKhaki;border:1px solid DarkKhaki;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Editor</span><span style="display:inline-block;background:transparent;color:Peru;border:1px solid Peru;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Admin</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:goldenrod; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">POST</span></span><code>/authors/</code></div></div>
+---
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>Edit Author</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkKhaki;border:1px solid DarkKhaki;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Editor</span><span style="display:inline-block;background:transparent;color:Peru;border:1px solid Peru;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Admin</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:royalblue; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">PUT</span></span><code>/authors?id=71</code></div></div>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>Delete Author</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:Peru;border:1px solid Peru;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Admin</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:salmon; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">DELETE</span></span><code>/authors?id=71</code></div></div>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>All Authors</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:deeppink; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">OPTIONS</span></span><code>/authors</code></div></div>
+**2. All Authors - Filter** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
+
+
+↳ <span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span> `/authors?birth_year=1892`
+
+
+---
+
+
+
+**3. All Authors - Search** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
+
+
+↳ <span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span> `/authors?q=her`
+
+
+---
+
+
+
+**4. Single Author** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
+
+
+↳ <span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span> `/authors?id=4`
+
+
+---
+
+
+
+**5. New Author** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkKhaki;
+            border:1px solid DarkKhaki;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Editor</span><span style="
+            display:inline-block;
+            background:transparent;
+            color:Peru;
+            border:1px solid Peru;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Admin</span></span>
+
+
+↳ <span style=" display:inline-block; background:goldenrod; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">POST</span> `/authors/`
+
+
+---
+
+
+
+**6. Edit Author** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkKhaki;
+            border:1px solid DarkKhaki;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Editor</span><span style="
+            display:inline-block;
+            background:transparent;
+            color:Peru;
+            border:1px solid Peru;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Admin</span></span>
+
+
+↳ <span style=" display:inline-block; background:royalblue; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">PUT</span> `/authors?id=71`
+
+
+---
+
+
+
+**7. Delete Author** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:Peru;
+            border:1px solid Peru;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Admin</span></span>
+
+
+↳ <span style=" display:inline-block; background:salmon; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">DELETE</span> `/authors?id=71`
+
+
+---
+
+
+
+**8. All Authors** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
+
+
+↳ <span style=" display:inline-block; background:deeppink; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">OPTIONS</span> `/authors`
+
+
+---
+
+
 
 ## 📁 3. Genres endpoint
 
 Manage and retrieve genre information for books. Each genre includes its name and a list of books associated with it, either as main genre or subgenre. Endpoints allow listing all genres, fetching details for a single genre, and browsing books by genre.
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>All Genres - Paginated</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span></span><code>/genres</code></div></div>
+**1. All Genres - Paginated** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>Single Genre</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span></span><code>/genres?id=5</code></div></div>
 
-<div style="margin-bottom:1em; padding:0.75em 1em; border:1px solid dimgray; border-radius:8px;"><div style="display: flex; align-items: center;"><strong>All Genres</strong><span style="margin-left: auto;"><span style="display:inline-flex; gap:4px; align-items:center;"><span style="display:inline-block;background:transparent;color:DarkSeaGreen;border:1px solid DarkSeaGreen;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;font-family:monospace;vertical-align:middle;white-space:nowrap;">Public</span></span></span></div><div style="margin-top:0.5rem;"><span style="display: inline-block; width: 6rem;"><span style=" display:inline-block; background:deeppink; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">OPTIONS</span></span><code>/genres</code></div></div>
+↳ <span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span> `/genres`
+
+
+---
+
+
+
+**2. Single Genre** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
+
+
+↳ <span style=" display:inline-block; background:mediumseagreen; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">GET</span> `/genres?id=5`
+
+
+---
+
+
+
+**3. All Genres** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="display:inline-flex; align-items:center;"><span style="
+            display:inline-block;
+            background:transparent;
+            color:DarkSeaGreen;
+            border:1px solid DarkSeaGreen;
+            border-radius:6px;
+            padding:2px 6px;
+            font-size:12px;
+            line-height:18px;
+            font-family:monospace;
+            vertical-align:middle;
+            white-space:nowrap;
+            margin-right:4px;
+        ">Public</span></span>
+
+
+↳ <span style=" display:inline-block; background:deeppink; color:white; border-radius:6px; padding:2px 6px; font-size:12px; line-height:18px; font-family:monospace; vertical-align:middle; white-space:nowrap; ">OPTIONS</span> `/genres`
+
+
+---
+
+
 
