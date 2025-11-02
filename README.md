@@ -1,4 +1,4 @@
-These docs are auto-generated from postman_collection.json.
+These docs are auto-generated from postman_collection.json. This is a homemade script, as I did not like the other json-to-md libraries I found out there.
 
 # Book Tracker
 
